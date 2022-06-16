@@ -17,3 +17,49 @@ jobs:
 
       - name: Try building
         run: sudo ./build.sh
+
+      - name: Show all files
+        run: find . 
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ runner.os }}-artifact
+          path: |
+            pi-gen-fabmo/deploy/*
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - name: Delete the snapshot release
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: snapshot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete the snapshot tag locally too
+        shell: bash
+        run: git tag -d snapshot || true
+
+      - name: Recreate the snapshot release
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        run: gh release create -p -t "fabmo image development snapshot" -n "Development snapshot." snapshot
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Publish a snapshot
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        run: gh release upload snapshot artifacts/*/* 
+
