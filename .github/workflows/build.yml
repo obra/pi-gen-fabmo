@@ -1,0 +1,19 @@
+name: Snapshot build & publish
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - name: Install deps
+        run: sudo apt-get install coreutils quilt parted qemu-user-static debootstrap zerofree zip  dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc qemu-utils kpartx gpg pigz
+
+      - name: Try building
+        run: sudo ./build.sh
