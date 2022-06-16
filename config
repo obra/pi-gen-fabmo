@@ -7,3 +7,4 @@ KEYBOARD_LAYOUT="English (US)"
 TARGET_HOSTNAME="fabmo"
 TIMEZONE_DEFAULT=America/New_York
 STAGE_LIST="stage0 stage1 stage2 stage3 stage5-fabmo"
+DEPLOY_COMPRESSION=zip

@@ -18,15 +18,12 @@ jobs:
       - name: Try building
         run: sudo ./build.sh
 
-      - name: Show all files
-        run: find . 
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: ${{ runner.os }}-artifact
           path: |
-            pi-gen-fabmo/deploy/*
+            deploy/*
   publish:
     needs: build
     runs-on: ubuntu-latest
